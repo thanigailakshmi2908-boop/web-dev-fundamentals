@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Development Fundamentals</title>
+<style>
+  :root{
+    --paper: #FAFAF6;
+    --paper-line: #E4E1D6;
+    --ink: #1D2B36;
+    --ink-soft: #4B5A63;
+    --html-accent: #B5482F;
+    --html-accent-bg: #F5E3DC;
+    --css-accent: #2C5F5C;
+    --css-accent-bg: #DDEAE7;
+    --js-accent: #B8860B;
+    --js-accent-bg: #F3E9CE;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.55;
+  }
+
+  /* faint grid paper texture */
+  body{
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment: fixed;
+  }
+
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,246,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--paper-line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px; padding-bottom:14px;
+    max-width:760px;
+  }
+  .nav-title{font-family:var(--serif); font-weight:700; font-size:1.05rem;}
+  .nav-links{display:flex; gap:18px; font-size:0.88rem;}
+  .nav-links a{color:var(--ink-soft); text-decoration:none; border-bottom:1px solid transparent;}
+  .nav-links a:hover{color:var(--ink); border-bottom-color:var(--ink);}
+  @media (max-width:520px){ .nav-links{display:none;} }
+
+  /* ---------- HERO ---------- */
+  header.hero{padding:64px 0 40px;}
+  header.hero h1{
+    font-family:var(--serif);
+    font-size:2.5rem;
+    line-height:1.15;
+    margin:0 0 14px;
+    max-width:11ch;
+  }
+  header.hero p.lede{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:46ch;
+    margin:0 0 40px;
+  }
+
+  /* exploded layer stack */
+  .stack{
+    position:relative;
+    height:230px;
+    margin:0 0 20px;
+  }
+  .layer{
+    position:absolute; left:0; right:0;
+    height:64px;
+    border-radius:6px;
+    display:flex; align-items:center; padding:0 20px;
+    font-family:var(--mono);
+    font-size:0.82rem;
+    border:1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 6px 14px rgba(29,43,54,0.06);
+  }
+  .layer .tag{font-weight:600; margin-right:10px;}
+  .layer.html{ top:0;   background:var(--html-accent-bg); color:var(--html-accent); }
+  .layer.css{  top:78px; background:var(--css-accent-bg);  color:var(--css-accent); }
+  .layer.js{   top:156px;background:var(--js-accent-bg);   color:var(--js-accent); }
+
+  /* ---------- SECTIONS ---------- */
+  section.pillar{padding:56px 0; border-top:1px solid var(--paper-line);}
+  .pillar-head{display:flex; align-items:baseline; gap:12px; margin-bottom:6px;}
+  .pillar-head .swatch{width:14px; height:14px; border-radius:3px; flex:none;}
+  .pillar h2{font-family:var(--serif); font-size:1.7rem; margin:0;}
+  .pillar .role{color:var(--ink-soft); font-size:0.95rem; margin:0 0 24px 26px;}
+
+  .html .swatch{background:var(--html-accent);}
+  .css .swatch{background:var(--css-accent);}
+  .js .swatch{background:var(--js-accent);}
+  .html h2{color:var(--html-accent);}
+  .css h2{color:var(--css-accent);}
+  .js h2{color:var(--js-accent);}
+
+  .concept-grid{display:grid; gap:14px;}
+  .concept{
+    border:1px solid var(--paper-line);
+    border-left-width:4px;
+    border-radius:4px;
+    padding:16px 18px;
+    background:#fff;
+  }
+  .html .concept{border-left-color:var(--html-accent);}
+  .css .concept{border-left-color:var(--css-accent);}
+  .js .concept{border-left-color:var(--js-accent);}
+  .concept h3{margin:0 0 6px; font-size:1rem;}
+  .concept p{margin:0 0 10px; color:var(--ink-soft); font-size:0.93rem;}
+  pre{
+    margin:0; padding:12px 14px;
+    background:#F3F1EA;
+    border-radius:4px;
+    overflow-x:auto;
+    font-family:var(--mono);
+    font-size:0.82rem;
+    color:var(--ink);
+  }
+
+  /* ---------- PLAYGROUND ---------- */
+  section.playground{padding:56px 0; border-top:1px solid var(--paper-line);}
+  section.playground h2{font-family:var(--serif); font-size:1.7rem; margin:0 0 6px;}
+  section.playground > .wrap > p{color:var(--ink-soft); margin:0 0 22px;}
+  .editors{display:grid; gap:10px; margin-bottom:16px;}
+  .editor label{
+    display:block; font-family:var(--mono); font-size:0.78rem;
+    margin-bottom:4px; color:var(--ink-soft);
+  }
+  .editor textarea{
+    width:100%; min-height:88px; resize:vertical;
+    font-family:var(--mono); font-size:0.82rem;
+    padding:10px 12px; border-radius:4px;
+    border:1px solid var(--paper-line);
+    background:#fff; color:var(--ink);
+  }
+  .editor.html textarea{border-left:4px solid var(--html-accent);}
+  .editor.css textarea{border-left:4px solid var(--css-accent);}
+  .editor.js textarea{border-left:4px solid var(--js-accent);}
+  .preview-box{
+    border:1px solid var(--paper-line);
+    border-radius:6px;
+    overflow:hidden;
+    background:#fff;
+  }
+  .preview-box .bar{
+    background:var(--paper-line);
+    font-family:var(--mono); font-size:0.72rem;
+    padding:6px 12px; color:var(--ink-soft);
+  }
+  .preview-box iframe{width:100%; height:160px; border:0; display:block;}
+
+  /* ---------- CHEAT SHEET ---------- */
+  section.cheat{padding:56px 0; border-top:1px solid var(--paper-line);}
+  section.cheat h2{font-family:var(--serif); font-size:1.7rem; margin:0 0 26px;}
+  .cheat-cols{display:grid; gap:28px;}
+  .cheat-col h3{
+    font-size:0.85rem; letter-spacing:0.02em;
+    color:var(--ink-soft); margin:0 0 10px;
+    font-weight:600;
+  }
+  .cheat-col table{width:100%; border-collapse:collapse; font-size:0.86rem;}
+  .cheat-col td{padding:6px 4px; border-bottom:1px solid var(--paper-line); vertical-align:top;}
+  .cheat-col td:first-child{
+    font-family:var(--mono); white-space:nowrap; padding-right:14px;
+    color:var(--ink);
+  }
+  .cheat-col td:last-child{color:var(--ink-soft);}
+  @media (min-width:640px){ .cheat-cols{grid-template-columns:repeat(3,1fr);} }
+
+  /* ---------- FOOTER / NEXT STEPS ---------- */
+  footer{padding:56px 0 80px; border-top:1px solid var(--paper-line);}
+  footer h2{font-family:var(--serif); font-size:1.5rem; margin:0 0 16px;}
+  footer ol{padding-left:20px; color:var(--ink-soft); font-size:0.95rem;}
+  footer li{margin-bottom:10px;}
+  footer .note{
+    margin-top:30px; padding-top:20px; border-top:1px solid var(--paper-line);
+    font-size:0.82rem; color:var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <span class="nav-title">Web Fundamentals</span>
+    <div class="nav-links">
+      <a href="#html-section">HTML</a>
+      <a href="#css-section">CSS</a>
+      <a href="#js-section">JS</a>
+      <a href="#playground">Try it</a>
+      <a href="#cheat-sheet">Cheat sheet</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="stack" aria-hidden="true">
+      <div class="layer js"><span class="tag">JS</span> behavior — what it does</div>
+      <div class="layer css"><span class="tag">CSS</span> style — how it looks</div>
+      <div class="layer html"><span class="tag">HTML</span> structure — what it is</div>
+    </div>
+    <h1>Every web page is three layers, stacked.</h1>
+    <p class="lede">A working reference for the three languages that build the web: what each one is for, the core ideas worth knowing cold, and a live playground to test them. Built for exam prep now, and useful the day you're asked to build something real.</p>
+  </div>
+</header>
+
+<section class="pillar html" id="html-section">
+  <div class="wrap">
+    <div class="pillar-head">
+      <span class="swatch"></span>
+      <h2>HTML — structure</h2>
+    </div>
+    <p class="role">Defines what's on the page and what each piece means, not how it looks.</p>
+    <div class="concept-grid">
+      <div class="concept">
+        <h3>Elements and nesting</h3>
+        <p>A page is a tree of elements. Each tag describes the role of the content it wraps — a heading, a paragraph, a link — and elements nest inside each other to build structure.</p>
+        <pre>&lt;article&gt;
+  &lt;h1&gt;Page title&lt;/h1&gt;
+  &lt;p&gt;A short paragraph.&lt;/p&gt;
+&lt;/article&gt;</pre>
+      </div>
+      <div class="concept">
+        <h3>Semantic tags</h3>
+        <p>Tags like <code>&lt;nav&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, and <code>&lt;footer&gt;</code> describe the purpose of a region. This helps screen readers, search engines, and anyone reading your code later.</p>
+        <pre>&lt;nav&gt;...&lt;/nav&gt;
+&lt;main&gt;...&lt;/main&gt;
+&lt;footer&gt;...&lt;/footer&gt;</pre>
+      </div>
+      <div class="concept">
+        <h3>Attributes</h3>
+        <p>Attributes add extra information to a tag — a link's destination, an image's source, a form field's name.</p>
+        <pre>&lt;a href="/about"&gt;About&lt;/a&gt;
+&lt;img src="cat.jpg" alt="A cat"&gt;</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pillar css" id="css-section">
+  <div class="wrap">
+    <div class="pillar-head">
+      <span class="swatch"></span>
+      <h2>CSS — style</h2>
+    </div>
+    <p class="role">Controls how the structure looks: color, spacing, layout, and responsiveness.</p>
+    <div class="concept-grid">
+      <div class="concept">
+        <h3>Selectors and rules</h3>
+        <p>A selector picks which elements a rule applies to. Rules are property–value pairs inside braces.</p>
+        <pre>p {
+  color: #333;
+  font-size: 16px;
+}</pre>
+      </div>
+      <div class="concept">
+        <h3>The box model</h3>
+        <p>Every element is a box made of content, padding, border, and margin, from the inside out. Most layout bugs come from misunderstanding this.</p>
+        <pre>.card {
+  padding: 16px;
+  border: 1px solid #ccc;
+  margin: 12px;
+}</pre>
+      </div>
+      <div class="concept">
+        <h3>Flexbox for layout</h3>
+        <p>Flexbox arranges children in a row or column and distributes space between them — the most common tool for everyday layout.</p>
+        <pre>.row {
+  display: flex;
+  justify-content: space-between;
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pillar js" id="js-section">
+  <div class="wrap">
+    <div class="pillar-head">
+      <span class="swatch"></span>
+      <h2>JavaScript — behavior</h2>
+    </div>
+    <p class="role">Makes the page respond: react to clicks, change content, talk to servers.</p>
+    <div class="concept-grid">
+      <div class="concept">
+        <h3>Variables and functions</h3>
+        <p>Variables store values; functions bundle steps you can reuse.</p>
+        <pre>let count = 0;
+function increment() {
+  count = count + 1;
+}</pre>
+      </div>
+      <div class="concept">
+        <h3>Selecting and changing elements</h3>
+        <p>JavaScript can find an element in the page and change its content or style directly.</p>
+        <pre>const title = document.querySelector("h1");
+title.textContent = "Updated!";</pre>
+      </div>
+      <div class="concept">
+        <h3>Event listeners</h3>
+        <p>An event listener runs code in response to something happening — a click, a key press, a page load.</p>
+        <pre>button.addEventListener("click", () => {
+  increment();
+});</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="playground" id="playground">
+  <div class="wrap">
+    <h2>Try it yourself</h2>
+    <p>Edit any box below — the preview updates live. This is the fastest way to see how the three layers actually connect.</p>
+    <div class="editors">
+      <div class="editor html">
+        <label for="ed-html">HTML</label>
+        <textarea id="ed-html">&lt;button id="btn"&gt;Click me&lt;/button&gt;
+&lt;p id="msg"&gt;Waiting...&lt;/p&gt;</textarea>
+      </div>
+      <div class="editor css">
+        <label for="ed-css">CSS</label>
+        <textarea id="ed-css">button {
+  background: #2C5F5C;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#msg { font-family: sans-serif; }</textarea>
+      </div>
+      <div class="editor js">
+        <label for="ed-js">JavaScript</label>
+        <textarea id="ed-js">document.getElementById("btn").addEventListener("click", function() {
+  document.getElementById("msg").textContent = "Clicked!";
+});</textarea>
+      </div>
+    </div>
+    <div class="preview-box">
+      <div class="bar">preview</div>
+      <iframe id="preview" title="live preview"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="cheat" id="cheat-sheet">
+  <div class="wrap">
+    <h2>Quick reference</h2>
+    <div class="cheat-cols">
+      <div class="cheat-col">
+        <h3>HTML tags</h3>
+        <table>
+          <tr><td>&lt;div&gt;</td><td>generic block container</td></tr>
+          <tr><td>&lt;span&gt;</td><td>generic inline container</td></tr>
+          <tr><td>&lt;ul&gt;/&lt;li&gt;</td><td>bullet list and items</td></tr>
+          <tr><td>&lt;form&gt;</td><td>collects user input</td></tr>
+          <tr><td>&lt;input&gt;</td><td>a single form field</td></tr>
+          <tr><td>&lt;table&gt;</td><td>tabular data</td></tr>
+        </table>
+      </div>
+      <div class="cheat-col">
+        <h3>CSS properties</h3>
+        <table>
+          <tr><td>display</td><td>block, flex, grid, none</td></tr>
+          <tr><td>position</td><td>static, relative, absolute, fixed</td></tr>
+          <tr><td>gap</td><td>space between flex/grid children</td></tr>
+          <tr><td>grid-template-columns</td><td>defines a grid's columns</td></tr>
+          <tr><td>transition</td><td>animates a property change</td></tr>
+          <tr><td>@media</td><td>conditional rules by screen size</td></tr>
+        </table>
+      </div>
+      <div class="cheat-col">
+        <h3>JS methods</h3>
+        <table>
+          <tr><td>querySelector()</td><td>find one matching element</td></tr>
+          <tr><td>addEventListener()</td><td>run code on an event</td></tr>
+          <tr><td>fetch()</td><td>request data from a server</td></tr>
+          <tr><td>JSON.parse()</td><td>text → JS object</td></tr>
+          <tr><td>array.map()</td><td>transform each item in a list</td></tr>
+          <tr><td>console.log()</td><td>print for debugging</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>Turning this into something for your job</h2>
+    <ol>
+      <li>Rebuild this stack idea as your own portfolio page — swap the content for a project of yours and the three-layer mental model still applies.</li>
+      <li>Practice by recreating one small real website's layout using just HTML and CSS, without looking at its code.</li>
+      <li>Add one small interactive feature with JavaScript — a toggle, a counter, a filter — and be ready to explain how it works in an interview.</li>
+      <li>Push your code to GitHub. A public repo with clean commits is often the first thing an employer checks.</li>
+    </ol>
+    <div class="note">Reference only — always verify current best practices, since web standards evolve.</div>
+  </div>
+</footer>
+
+<script>
+  const htmlBox = document.getElementById('ed-html');
+  const cssBox = document.getElementById('ed-css');
+  const jsBox = document.getElementById('ed-js');
+  const preview = document.getElementById('preview');
+
+  function render(){
+    const doc = `<!DOCTYPE html><html><head><style>
+      body{font-family:sans-serif; margin:12px; color:#1D2B36;}
+      ${cssBox.value}
+    </style></head><body>
+      ${htmlBox.value}
+      <script>${jsBox.value}<\/script>
+    </body></html>`;
+    preview.srcdoc = doc;
+  }
+
+  [htmlBox, cssBox, jsBox].forEach(el => el.addEventListener('input', render));
+  render();
+</script>
+
+</body>
+</html>
